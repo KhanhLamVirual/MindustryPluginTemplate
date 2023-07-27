@@ -25,7 +25,7 @@ public class Main extends Plugin{
       MessageChannel channel = gateway.getChannelById(Snowflake.of(1131854700669575198L)).ofType(TextChannel.class).block();
       EmbedCreateSpec chatembed = EmbedCreateSpec.builder()
         .color(Color.GRAY)
-        .description("[" + player + "] >> " + playerchat")
+        .description("[" + player + "] >> " + playerchat)
         .build();
       channel.createMessage(chatembed).block();
       gateway.logout().block();
