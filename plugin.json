@@ -1,7 +1,7 @@
 {
-  "name": "ExamplePlugin",
-  "author": "Anuke",
-  "main": "example.ExamplePlugin",
+  "name": "UtilsPlugin",
+  "author": "Peo",
+  "main": "utilsplugin.Main",
   "description": "A plugin to demonstrate some basic features.",
   "version": 1.0
 }
