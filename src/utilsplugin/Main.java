@@ -22,7 +22,7 @@ public class Main extends Plugin{
       String playerchat = event.message;
       GatewayDiscordClient gateway = client.login().block();
       MessageChannel channel = gateway.getChannelById(Snowflake.of(1131854700669575198L)).ofType(TextChannel.class).block();
-      channel.createMessage("[" + player + "] > " + playerchat).block();
+      channel.createMessage("[" + player + "] >> " + playerchat).block();
       gateway.logout().block();
     });
   }
