@@ -17,10 +17,10 @@ public class Main extends Plugin{
     JDA bot = JDABuilder.createDefault(TOKEN).build();
     Events.on(PlayerChatEvent.class, event -> {
       Player player = event.player;
-      String message = event.message;
+      String playerchat = event.message;
       
       TextChannel channel = bot.getTextChannelById("1131854700669575198");
-      channel.sendMesssage("[" + player + "] > " + message).queue();
+      channel.sendMessage("[" + player + "] > " + playerchat).queue();
     });
   }
 }
