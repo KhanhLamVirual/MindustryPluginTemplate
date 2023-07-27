@@ -19,7 +19,7 @@ public class Main extends Plugin{
       Player player = event.player;
       String playerchat = event.message;
       GatewayDiscordClient gateway = client.login().block();
-      MessageChannel channel = gateway.getChannelById("1131854700669575198").ofType(MessageChannel.class).block();
+      MessageChannel channel = gateway.getChannelById(1131854700669575198).ofType(MessageChannel.class).block();
       channel.createMessage("[" + player + "] > " + playerchat).block();
       gateway.logout().block();
     });
