@@ -1,6 +1,10 @@
 package utilsplugin;
 
 import net.dv8tion.jda.api.*;
+
+import arc.*;
+import arc.util.*;
+import mindustry.mod.*;
 import mindustry.gen.*;
 import mindustry.game.EventType.*;
 
