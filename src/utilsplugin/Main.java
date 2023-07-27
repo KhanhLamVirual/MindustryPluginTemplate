@@ -13,7 +13,7 @@ public class Main extends Plugin{
   
   @Override
   public void init(){
-    final String TOKEN = "";
+    final String TOKEN = "MTEzMzkzOTk0OTAyOTMwNjQ5OA.GcxXBn.bIilpkmiSSfblTS7vYpmq8dj__n3U0H4jwxshA";
     JDABuilder bot = JDABuilder.createDefault(TOKEN)
       .setActivity(Activity.playing("vndustry.ddnd.net"))
       .build();
@@ -21,7 +21,7 @@ public class Main extends Plugin{
       Player player = event.player;
       String message = event.message;
       
-      TextChannel channel = bot.getTextChannelById("");
+      TextChannel channel = bot.getTextChannelById("1131854700669575198");
       channel.sendMesssage("[" + player + "] > " + message).queue();
     });
   }
