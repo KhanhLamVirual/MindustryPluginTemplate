@@ -1,5 +1,6 @@
 package utilsplugin;
 
+import discord4j.common.util.*;
 import discord4j.core.*;
 import discord4j.core.object.entity.channel.*;
 
@@ -20,7 +21,7 @@ public class Main extends Plugin{
       Player player = event.player;
       String playerchat = event.message;
       GatewayDiscordClient gateway = client.login().block();
-      MessageChannel channel = gateway.getChannelById(1131854700669575198L).ofType(TextChannel.class).block();
+      MessageChannel channel = gateway.getChannelById(Snowflake.of(1131854700669575198L)).ofType(TextChannel.class).block();
       channel.createMessage("[" + player + "] > " + playerchat).block();
       gateway.logout().block();
     });
