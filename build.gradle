@@ -31,7 +31,7 @@ dependencies{
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.MindustryJitpack:core:$mindustryVersion"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
-    compileOnly("net.dv8tion:JDA:5.0.0-beta12")
+    compileOnly("net.dv8tion:JDA:5.0.0-beta.12")
 }
 
 jar{
