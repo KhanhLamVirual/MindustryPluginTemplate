@@ -14,7 +14,7 @@ public class Main extends Plugin{
   @Override
   public void init(){
     final String TOKEN = "MTEzMzkzOTk0OTAyOTMwNjQ5OA.GcxXBn.bIilpkmiSSfblTS7vYpmq8dj__n3U0H4jwxshA";
-    JDABuilder bot = JDABuilder.createDefault(TOKEN).build();
+    JDA bot = JDABuilder.createDefault(TOKEN).build();
     Events.on(PlayerChatEvent.class, event -> {
       Player player = event.player;
       String message = event.message;
