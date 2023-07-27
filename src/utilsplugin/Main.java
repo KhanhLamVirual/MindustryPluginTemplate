@@ -2,8 +2,8 @@ package utilsplugin;
 
 import discord4j.common.util.*;
 import discord4j.core.*;
-import java.awt.*;;
-import discord4j.core.spec.EmbedCreateSpec.*;
+import java.awt.*;
+import discord4j.core.spec.*;
 import discord4j.core.object.entity.channel.*;
 
 import arc.*;
