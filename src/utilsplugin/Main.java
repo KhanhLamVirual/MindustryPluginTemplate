@@ -2,6 +2,7 @@ package utilsplugin;
 
 import discord4j.common.util.*;
 import discord4j.core.*;
+import discord4j.core.spec.*;
 import discord4j.core.object.entity.channel.*;
 
 import arc.*;
@@ -18,11 +19,15 @@ public class Main extends Plugin{
     final long ChannelID = 1131854700669575198L;
     DiscordClient client = DiscordClient.create(TOKEN);
     Events.on(PlayerChatEvent.class, event -> {
-      Player player = event.player;
+      Player player = event.player.name;
       String playerchat = event.message;
       GatewayDiscordClient gateway = client.login().block();
       MessageChannel channel = gateway.getChannelById(Snowflake.of(1131854700669575198L)).ofType(TextChannel.class).block();
-      channel.createMessage("[" + player + "] >> " + playerchat).block();
+      EmbedCreateSpec chatembed = EmbedCreateSpec.builder()
+        .color(Color.GRAY)
+        .description("[" + player + "] >> " + playerchat")
+        .build();
+      channel.createMessage(chatembed).block();
       gateway.logout().block();
     });
   }
