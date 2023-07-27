@@ -2,7 +2,7 @@ package utilsplugin;
 
 import discord4j.common.util.*;
 import discord4j.core.*;
-import discord4j.core.spec.*;
+import java.awt.*;;
 import discord4j.core.spec.EmbedCreateSpec.*;
 import discord4j.core.object.entity.channel.*;
 
@@ -25,7 +25,7 @@ public class Main extends Plugin{
       GatewayDiscordClient gateway = client.login().block();
       MessageChannel channel = gateway.getChannelById(Snowflake.of(1131854700669575198L)).ofType(TextChannel.class).block();
       EmbedCreateSpec chatembed = EmbedCreateSpec.builder()
-        .color(Color.GRAY)
+        .color(Color.DARK_GRAY)
         .description("[" + player + "] >> " + playerchat)
         .build();
       channel.createMessage(chatembed).block();
