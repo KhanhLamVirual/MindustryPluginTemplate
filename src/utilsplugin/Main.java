@@ -1,6 +1,7 @@
 package utilsplugin;
 
 import net.dv8tion.jda.api.*;
+import net.dv8tion.jda.api.entities.*;
 
 import arc.*;
 import arc.util.*;
