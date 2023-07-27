@@ -1,5 +1,7 @@
 package utilsplugin;
 
+import java.math.BigInteger;
+
 import discord4j.core.*;
 import discord4j.core.object.entity.channel.*;
 
@@ -14,7 +16,7 @@ public class Main extends Plugin{
   @Override
   public void init(){
     final String TOKEN = "MTEzMzkzOTk0OTAyOTMwNjQ5OA.GcxXBn.bIilpkmiSSfblTS7vYpmq8dj__n3U0H4jwxshA";
-    final long ChannelID = 1131854700669575198;
+    BigInteger ChannelID = new BigInteger("1131854700669575198");
     DiscordClient client = DiscordClient.create(TOKEN);
     Events.on(PlayerChatEvent.class, event -> {
       Player player = event.player;
