@@ -10,6 +10,6 @@ public class Main extends Plugin{
     Events.on(PlayerChatEvent.class, event -> {
       Player player = event.player;
       String message = event.message;
-    }
+    });
   }
 }
