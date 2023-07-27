@@ -13,11 +13,15 @@ public class Main extends Plugin{
   @Override
   public void init(){
     final String TOKEN = "";
-    JDABuilder bot = JDABuilder.createDefault(TOKEN);
-    bot.build();
+    JDABuilder bot = JDABuilder.createDefault(TOKEN)
+      .setActivity(Activity.playing("vndustry.ddnd.net")
+      .build();
     Events.on(PlayerChatEvent.class, event -> {
       Player player = event.player;
       String message = event.message;
+      
+      TextChannel channel = bot.getTextChannelById("");
+      channel.sendMesssage("[" + player + "] > " + message).queue();
     });
   }
 }
