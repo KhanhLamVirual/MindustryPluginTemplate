@@ -9,6 +9,7 @@ public class Main extends Plugin{
   public void init(){
     Events.on(PlayerChatEvent.class, event -> {
       Player player = event.player;
+      String message = event.message;
     }
   }
 }
