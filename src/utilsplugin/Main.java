@@ -7,7 +7,7 @@ import arc.*;
 import arc.util.*;
 import mindustry.mod.*;
 import mindustry.gen.*;
-import mindustry.game.EventType.*;
+import mindustry.game.EventType.TextChannel;
 
 public class Main extends Plugin{
   
