@@ -9,8 +9,12 @@ import mindustry.gen.*;
 import mindustry.game.EventType.*;
 
 public class Main extends Plugin{
+  
   @Override
   public void init(){
+    final String TOKEN = "";
+    JDABuilder bot = JDABuilder.createDefault(TOKEN);
+    bot.build();
     Events.on(PlayerChatEvent.class, event -> {
       Player player = event.player;
       String message = event.message;
