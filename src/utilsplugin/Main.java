@@ -15,7 +15,7 @@ public class Main extends Plugin{
   public void init(){
     final String TOKEN = "MTEzMzkzOTk0OTAyOTMwNjQ5OA.GcxXBn.bIilpkmiSSfblTS7vYpmq8dj__n3U0H4jwxshA";
     JDA bot = JDABuilder.createDefault(TOKEN)
-      .setActivity(Activity.playing("vndustry.ddns.net")
+      .setActivity(Activity.playing("vndustry.ddns.net"))
       .build();
     Events.on(PlayerChatEvent.class, event -> {
       Player player = event.player;
