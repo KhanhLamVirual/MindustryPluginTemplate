@@ -1,6 +1,6 @@
 name: Java CI
 
-on: [runs]
+on: [workflow_call]
 
 jobs:
   buildJar:
