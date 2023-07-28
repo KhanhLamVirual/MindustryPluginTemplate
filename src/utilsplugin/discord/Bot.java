@@ -12,7 +12,7 @@ public class Bot {
     GatewayDiscordClient gateway = client.login().block();
   }
   public static void sendchat(String message) {
-    MessageChannel channel = this.gateway.getChannelById(Snowflake.of(1131854700669575198L)).ofType(TextChannel.class).block();
+    MessageChannel channel = gateway.getChannelById(Snowflake.of(1131854700669575198L)).ofType(TextChannel.class).block();
     EmbedCreateSpec chatembed = EmbedCreateSpec.builder()
       .color(Color.DARK_GRAY)
       .title(message)
