@@ -19,4 +19,5 @@ public class Bot {
       .build();
     channel.createMessage(chatembed).block();
     gateway.logout().block();
+  }
 }
