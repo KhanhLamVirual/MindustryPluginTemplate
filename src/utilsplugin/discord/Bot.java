@@ -11,7 +11,7 @@ public class Bot {
   private static MessageChannel channel;
 
   
-  public static void connect() {
+  public static void connect(String TOKEN) {
     DiscordClient client = DiscordClient.create(TOKEN);
     GatewayDiscordClient gateway = client.login().block();
     channel = gateway.getChannelById(Snowflake.of(1131854700669575198L)).ofType(TextChannel.class).block();
