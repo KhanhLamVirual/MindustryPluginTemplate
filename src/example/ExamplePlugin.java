@@ -1,5 +1,6 @@
 package example;
 
+import arc.util.*;
 import arc.Events;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
@@ -156,6 +157,14 @@ public class ExamplePlugin extends Plugin
             rules.bannedUnits.remove(UnitTypes.poly);
             rules.bannedUnits.remove(UnitTypes.mega);
         });
+	Timer.schedule(() -> Vars.state.rules.waveTeam.data().units.each(unit -> {
+            CoreBuild core = unit.closestEnemyCore();
+            if (core == null || unit.dst(core) > 80f) return;
+
+            core.damage(unit.health, true);
+            unit.kill();
+        }), 0f, 1f);
+
     }
     
 }
