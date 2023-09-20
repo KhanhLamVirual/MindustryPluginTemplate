@@ -1,84 +1,161 @@
 package example;
 
-import arc.*;
-import arc.util.*;
-import mindustry.*;
-import mindustry.content.*;
-import mindustry.game.EventType.*;
-import mindustry.gen.*;
-import mindustry.mod.*;
-import mindustry.net.Administration.*;
-import mindustry.world.blocks.storage.*;
+import arc.Events;
+import arc.math.Mathf;
+import arc.struct.ObjectMap;
+import arc.struct.Seq;
+import mindustry.Vars;
+import mindustry.ai.types.FlyingAI;
+import mindustry.ai.types.GroundAI;
+import mindustry.content.Blocks;
+import mindustry.content.Items;
+import mindustry.content.UnitTypes;
+import mindustry.game.Rules;
+import mindustry.game.EventType.PlayEvent;
+import mindustry.game.EventType.UnitDestroyEvent;
+import mindustry.gen.Call;
+import mindustry.mod.Plugin;
+import mindustry.net.Administration.ActionType;
+import mindustry.type.ItemStack;
+import mindustry.type.UnitType;
+import mindustry.world.blocks.defense.ShockMine;
+import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.blocks.storage.CoreBlock.CoreBuild;
+import mindustry.world.blocks.units.UnitBlock;
+import mindustry.world.meta.BlockFlag;
+/**
+ * ExamplePlugin
+ */
+public class ExamplePlugin extends Plugin
+{
 
-public class ExamplePlugin extends Plugin{
+    private ObjectMap<UnitType, Seq<ItemStack>> drops;
 
-    //called when game initializes
     @Override
-    public void init(){
-        //listen for a block selection event
-        Events.on(BuildSelectEvent.class, event -> {
-            if(!event.breaking && event.builder != null && event.builder.buildPlan() != null && event.builder.buildPlan().block == Blocks.thoriumReactor && event.builder.isPlayer()){
-                //player is the unit controller
-                Player player = event.builder.getPlayer();
+    public void init() {
+        drops = ObjectMap.of(
+                UnitTypes.crawler, ItemStack.list(Items.copper, 20, Items.lead, 10, Items.silicon, 3),
+                UnitTypes.atrax, ItemStack.list(Items.copper, 30, Items.lead, 40, Items.graphite, 10, Items.titanium, 5),
+                UnitTypes.spiroct, ItemStack.list(Items.lead, 100, Items.graphite, 40, Items.silicon, 40, Items.thorium, 10),
+                UnitTypes.arkyid, ItemStack.list(Items.copper, 300, Items.graphite, 80, Items.metaglass, 80, Items.titanium, 80, Items.thorium, 20, Items.phaseFabric, 10),
+                UnitTypes.toxopid, ItemStack.list(Items.copper, 400, Items.lead, 400, Items.graphite, 120, Items.silicon, 120, Items.thorium, 40, Items.plastanium, 40, Items.surgeAlloy, 15, Items.phaseFabric, 5),
 
-                //send a message to everyone saying that this player has begun building a reactor
-                Call.sendMessage("[scarlet]ALERT![] " + player.name + " has begun building a reactor at " + event.tile.x + ", " + event.tile.y);
-            }
-        });
+                UnitTypes.dagger, ItemStack.list(Items.copper, 20, Items.lead, 10, Items.silicon, 3),
+                UnitTypes.mace, ItemStack.list(Items.copper, 30, Items.lead, 40, Items.graphite, 10, Items.titanium, 5),
+                UnitTypes.fortress, ItemStack.list(Items.lead, 100, Items.graphite, 40, Items.silicon, 40, Items.thorium, 10),
+                UnitTypes.scepter, ItemStack.list(Items.copper, 300, Items.silicon, 80, Items.metaglass, 80, Items.titanium, 80, Items.thorium, 20, Items.phaseFabric, 10),
+                UnitTypes.reign, ItemStack.list(Items.copper, 400, Items.lead, 400, Items.graphite, 120, Items.silicon, 120, Items.thorium, 40, Items.plastanium, 40, Items.surgeAlloy, 15, Items.phaseFabric, 5),
 
-        //add a chat filter that changes the contents of all messages
-        //in this case, all instances of "heck" are censored
-        Vars.netServer.admins.addChatFilter((player, text) -> text.replace("heck", "h*ck"));
+                UnitTypes.nova, ItemStack.list(Items.copper, 20, Items.lead, 10, Items.metaglass, 3),
+                UnitTypes.pulsar, ItemStack.list(Items.copper, 30, Items.lead, 40, Items.metaglass, 10),
+                UnitTypes.quasar, ItemStack.list(Items.lead, 100, Items.metaglass, 40, Items.silicon, 40, Items.titanium, 80, Items.thorium, 10),
+                UnitTypes.vela, ItemStack.list(Items.copper, 300, Items.metaglass, 80, Items.graphite, 80, Items.titanium, 60, Items.plastanium, 20, Items.surgeAlloy, 5),
+                UnitTypes.corvus, ItemStack.list(Items.copper, 400, Items.lead, 400, Items.graphite, 100, Items.silicon, 100, Items.metaglass, 120, Items.titanium, 120, Items.thorium, 60, Items.surgeAlloy, 10, Items.phaseFabric, 10),
 
-        //add an action filter for preventing players from doing certain things
+                UnitTypes.flare, ItemStack.list(Items.copper, 20, Items.lead, 10, Items.graphite, 3),
+                UnitTypes.horizon, ItemStack.list(Items.copper, 30, Items.lead, 40, Items.graphite, 10),
+                UnitTypes.zenith, ItemStack.list(Items.lead, 100, Items.graphite, 40, Items.silicon, 40, Items.titanium, 30, Items.plastanium, 10),
+                UnitTypes.antumbra, ItemStack.list(Items.copper, 300, Items.graphite, 80, Items.metaglass, 80, Items.titanium, 60, Items.surgeAlloy, 15),
+                UnitTypes.eclipse, ItemStack.list(Items.copper, 400, Items.lead, 400, Items.graphite, 120, Items.silicon, 120, Items.titanium, 120, Items.thorium, 40, Items.plastanium, 40, Items.surgeAlloy, 5, Items.phaseFabric, 10),
+
+                UnitTypes.mono, ItemStack.list(Items.copper, 20, Items.lead, 10, Items.silicon, 3),
+                UnitTypes.poly, ItemStack.list(Items.copper, 30, Items.lead, 40, Items.silicon, 10, Items.titanium, 5),
+                UnitTypes.mega, ItemStack.list(Items.lead, 100, Items.silicon, 40, Items.graphite, 40, Items.thorium, 10),
+                UnitTypes.quad, ItemStack.list(Items.copper, 300, Items.silicon, 80, Items.metaglass, 80, Items.titanium, 80, Items.thorium, 20, Items.phaseFabric, 10),
+                UnitTypes.oct, ItemStack.list(Items.copper, 400, Items.lead, 400, Items.graphite, 120, Items.silicon, 120, Items.thorium, 40, Items.plastanium, 40, Items.surgeAlloy, 15, Items.phaseFabric, 5),
+
+                UnitTypes.risso, ItemStack.list(Items.copper, 20, Items.lead, 10, Items.metaglass, 3),
+                UnitTypes.minke, ItemStack.list(Items.copper, 30, Items.lead, 40, Items.metaglass, 10),
+                UnitTypes.bryde, ItemStack.list(Items.lead, 100, Items.metaglass, 40, Items.silicon, 40, Items.titanium, 80, Items.thorium, 10),
+                UnitTypes.sei, ItemStack.list(Items.copper, 300, Items.metaglass, 80, Items.graphite, 80, Items.titanium, 60, Items.plastanium, 20, Items.surgeAlloy, 5),
+                UnitTypes.omura, ItemStack.list(Items.copper, 400, Items.lead, 400, Items.graphite, 100, Items.silicon, 100, Items.metaglass, 120, Items.titanium, 120, Items.thorium, 60, Items.surgeAlloy, 10, Items.phaseFabric, 10),
+
+                UnitTypes.retusa, ItemStack.list(Items.copper, 20, Items.lead, 10, Items.metaglass, 3),
+                UnitTypes.oxynoe, ItemStack.list(Items.copper, 30, Items.lead, 40, Items.metaglass, 10),
+                UnitTypes.cyerce, ItemStack.list(Items.lead, 100, Items.metaglass, 40, Items.silicon, 40, Items.titanium, 80, Items.thorium, 10),
+                UnitTypes.aegires, ItemStack.list(Items.copper, 300, Items.metaglass, 80, Items.graphite, 80, Items.titanium, 60, Items.plastanium, 20, Items.surgeAlloy, 5),
+                UnitTypes.navanax, ItemStack.list(Items.copper, 400, Items.lead, 400, Items.graphite, 100, Items.silicon, 100, Items.metaglass, 120, Items.titanium, 120, Items.thorium, 60, Items.surgeAlloy, 10, Items.phaseFabric, 10),
+
+                UnitTypes.alpha, ItemStack.list(Items.copper, 30, Items.lead, 30, Items.graphite, 20, Items.silicon, 20, Items.metaglass, 20),
+                UnitTypes.beta, ItemStack.list(Items.titanium, 40, Items.thorium, 20),
+                UnitTypes.gamma, ItemStack.list(Items.plastanium, 20, Items.surgeAlloy, 10, Items.phaseFabric, 10),
+
+                UnitTypes.stell, ItemStack.list(Items.beryllium, 20, Items.silicon, 25),
+                UnitTypes.locus, ItemStack.list(Items.beryllium, 20, Items.graphite, 20, Items.silicon, 20, Items.tungsten, 15),
+                UnitTypes.precept, ItemStack.list(Items.beryllium, 45, Items.graphite, 25, Items.silicon, 50, Items.tungsten, 50, Items.surgeAlloy, 75, Items.thorium, 40),
+                UnitTypes.vanquish, ItemStack.list(Items.beryllium, 80, Items.graphite, 50, Items.silicon, 100, Items.tungsten, 120, Items.oxide, 60, Items.surgeAlloy, 125, Items.thorium, 100, Items.phaseFabric, 60),
+                UnitTypes.conquer, ItemStack.list(Items.beryllium, 250, Items.graphite, 225, Items.silicon, 125, Items.tungsten, 140, Items.oxide, 120, Items.carbide, 240, Items.surgeAlloy, 250, Items.thorium, 240, Items.phaseFabric, 120),
+
+                UnitTypes.elude, ItemStack.list(Items.beryllium, 6, Items.graphite, 25, Items.silicon, 35),
+                UnitTypes.avert, ItemStack.list(Items.beryllium, 24, Items.graphite, 50, Items.silicon, 30, Items.tungsten, 20, Items.oxide, 20),
+                UnitTypes.obviate, ItemStack.list(Items.beryllium, 48, Items.graphite, 75, Items.silicon, 50, Items.tungsten, 45, Items.carbide, 50, Items.thorium, 40, Items.phaseFabric, 75),
+                UnitTypes.quell, ItemStack.list(Items.beryllium, 96, Items.graphite, 100, Items.silicon, 140, Items.tungsten, 70, Items.oxide, 60, Items.carbide, 75, Items.surgeAlloy, 60, Items.thorium, 100, Items.phaseFabric, 125),
+                UnitTypes.disrupt, ItemStack.list(Items.beryllium, 122, Items.graphite, 125, Items.silicon, 155, Items.tungsten, 100, Items.oxide, 120, Items.carbide, 240, Items.surgeAlloy, 120, Items.thorium, 240, Items.phaseFabric, 250),
+
+                UnitTypes.merui, ItemStack.list(Items.beryllium, 25, Items.silicon, 35, Items.tungsten, 10),
+                UnitTypes.cleroi, ItemStack.list(Items.beryllium, 35, Items.graphite, 20, Items.silicon, 25, Items.tungsten, 20, Items.oxide, 20),
+                UnitTypes.anthicus, ItemStack.list(Items.beryllium, 50, Items.graphite, 25, Items.silicon, 50, Items.tungsten, 65, Items.oxide, 75, Items.thorium, 40),
+                UnitTypes.tecta, ItemStack.list(Items.beryllium, 100, Items.graphite, 50, Items.silicon, 140, Items.tungsten, 120, Items.oxide, 125, Items.surgeAlloy, 60, Items.thorium, 100, Items.phaseFabric, 125),
+                UnitTypes.collaris, ItemStack.list(Items.beryllium, 135, Items.graphite, 90, Items.silicon, 175, Items.tungsten, 155, Items.oxide, 250, Items.carbide, 240, Items.surgeAlloy, 120, Items.thorium, 240, Items.phaseFabric, 120),
+
+                UnitTypes.evoke, ItemStack.list(Items.beryllium, 50, Items.graphite, 50, Items.silicon, 50),
+                UnitTypes.incite, ItemStack.list(Items.tungsten, 25, Items.oxide, 25, Items.carbide, 50),
+                UnitTypes.emanate, ItemStack.list(Items.surgeAlloy, 25, Items.thorium, 25, Items.phaseFabric, 50)
+        );
+
         Vars.netServer.admins.addActionFilter(action -> {
-            //random example: prevent blast compound depositing
-            if(action.type == ActionType.depositItem && action.item == Items.blastCompound && action.tile.block() instanceof CoreBlock){
-                action.player.sendMessage("Example action filter: Prevents players from depositing blast compound into the core.");
+            if (action.tile == null) return true;
+            if (action.type == ActionType.placeBlock || action.type == ActionType.breakBlock) {
+                if (!(VnTower.canBePlace(action.tile, action.block) || action.block instanceof ShockMine || action.block instanceof CoreBlock)) {
+                    Call.label(action.player.con, "[scarlet]Không Thể Đặt Ở Đây!", 2,action.tile.drawx(), action.tile.drawy());
+                    return false;
+                }
+            }
+            if ((action.type == ActionType.depositItem || action.type == ActionType.withdrawItem) && action.tile.block() instanceof CoreBlock) {
+                Call.label(action.player.con, "[scarlet]Không Thể Cho Vật Phẩm : [white]" + action.item.emoji() + " [scarlet]Vào Core", 2, action.tile.drawx(), action.tile.drawy());
                 return false;
             }
             return true;
         });
-    }
+        Events.on(UnitDestroyEvent.class, (e) -> {
+            if (e.unit.team != Vars.state.rules.waveTeam) return;
 
-    //register commands that run on the server
-    @Override
-    public void registerServerCommands(CommandHandler handler){
-        handler.register("reactors", "List all thorium reactors in the map.", args -> {
-            for(int x = 0; x < Vars.world.width(); x++){
-                for(int y = 0; y < Vars.world.height(); y++){
-                    //loop through and log all found reactors
-                    //make sure to only log reactor centers
-                    if(Vars.world.tile(x, y).block() == Blocks.thoriumReactor && Vars.world.tile(x, y).isCenter()){
-                        Log.info("Reactor at @, @", x, y);
-                    }
-                }
-            }
-        });
-    }
+            CoreBuild core = e.unit.closestEnemyCore();
+            Seq<ItemStack> drop = drops.get(e.unit.type);
 
-    //register commands that player can invoke in-game
-    @Override
-    public void registerClientCommands(CommandHandler handler){
+            if (core == null || drop == null) return;
 
-        //register a simple reply command
-        handler.<Player>register("reply", "<text...>", "A simple ping command that echoes a player's text.", (args, player) -> {
-            player.sendMessage("You said: [accent] " + args[0]);
+            StringBuilder builder = new StringBuilder();
+
+            drop.each((st) -> {
+                int amount = Mathf.random(st.amount - st.amount /2 , st.amount + st.amount /2);
+                builder.append("[accent]+").append(amount).append(" [white]").append(st.item.emoji()).append("  ");
+
+                Call.transferItemTo(e.unit, st.item,core.acceptStack(st.item, amount, core), e.unit.x, e.unit.y, core);
+            });
+            Call.label(builder.toString(), 1, e.unit.x + Mathf.range(4f), e.unit.y + Mathf.range(4f));
         });
 
-        //register a whisper command which can be used to send other players messages
-        handler.<Player>register("whisper", "<player> <text...>", "Whisper text to another player.", (args, player) -> {
-            //find player by name
-            Player other = Groups.player.find(p -> p.name.equalsIgnoreCase(args[0]));
+        Vars.content.units().each(type -> {
+            type.mineWalls = type.mineFloor = type.targetAir = type.targetGround = false;
+            type.payloadCapacity = type.legSplashDamage = type.range = type.maxRange = type.mineRange = 0f;
 
-            //give error message with scarlet-colored text if player isn't found
-            if(other == null){
-                player.sendMessage("[scarlet]No player by that name found!");
-                return;
-            }
+            type.aiController = type.flying ? FlyingAI::new : GroundAI::new;
+            type.targetFlags = new BlockFlag[]{BlockFlag.core};
+        });
 
-            //send the other player a message, using [lightgray] for gray text color and [] to reset color
-            other.sendMessage("[lightgray](whisper) " + player.name + ":[] " + args[1]);
+        Events.on(PlayEvent.class, (e) -> {
+            Rules rules = Vars.state.rules;
+            rules.bannedBlocks.addAll(Vars.content.blocks().select(UnitBlock.class::isInstance));
+            rules.bannedBlocks.remove(Blocks.airFactory);
+            rules.bannedBlocks.remove(Blocks.additiveReconstructor);
+            rules.bannedBlocks.remove(Blocks.multiplicativeReconstructor);
+
+            rules.bannedUnits.addAll(Vars.content.units().select(type ->  !type.hidden));
+            rules.bannedUnits.remove(UnitTypes.mono);
+            rules.bannedUnits.remove(UnitTypes.poly);
+            rules.bannedUnits.remove(UnitTypes.mega);
         });
     }
+    
 }
