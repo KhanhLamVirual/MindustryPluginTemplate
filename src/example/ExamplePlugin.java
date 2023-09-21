@@ -10,10 +10,12 @@ import mindustry.ai.types.FlyingAI;
 import mindustry.ai.types.GroundAI;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
+import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
 import mindustry.game.Rules;
 import mindustry.game.EventType.PlayEvent;
 import mindustry.game.EventType.UnitDestroyEvent;
+import mindustry.game.EventType.UnitSpawnEvent;
 import mindustry.gen.Call;
 import mindustry.mod.Plugin;
 import mindustry.net.Administration.ActionType;
@@ -143,6 +145,7 @@ public class ExamplePlugin extends Plugin
 
             type.aiController = type.flying ? FlyingAI::new : GroundAI::new;
             type.targetFlags = new BlockFlag[]{BlockFlag.core};
+            type.weapons.clear();
         });
 
         Events.on(PlayEvent.class, (e) -> {
@@ -164,6 +167,11 @@ public class ExamplePlugin extends Plugin
             core.damage(unit.health, true);
             unit.kill();
         }), 0f, 1f);
+
+        Events.on(UnitSpawnEvent.class, (e) -> {
+                e.unit.damageMultiplier(0f);
+                e.unit.apply(StatusEffects.disarmed, Float.POSITIVE_INFINITY);
+        });
 
     }
     
