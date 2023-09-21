@@ -17,14 +17,16 @@ repositories{
 
 ext{
     //the build number that this plugin is made for
-    mindustryVersion = 'v145'
+    mindustryVersion = 'v146'
     jabelVersion = "93fde537c7"
+    discordVersion = "3.3.0-M2"
+    usefulHash = "96f5ca2126"
 }
 
 //java 8 backwards compatibility flag
 allprojects{
     tasks.withType(JavaCompile){
-        options.compilerArgs.addAll(['--release', '8'])
+        options.compilerArgs.addAll(['--release', '17'])
     }
 }
 
@@ -32,9 +34,19 @@ dependencies{
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
+    implementation("com.discord4j:discord4j-core:$discordVersion")
+
+    implementation("com.github.xzxadixzx.useful-stuffs:bundle:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:collections:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:cooldowns:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:effect:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:config:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:menu:$usefulHash")
+    implementation("com.github.xzxadixzx.useful-stuffs:security:$usefulHash")
 }
 
 jar{
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     archiveFileName = "${project.archivesBaseName}.jar"
     from{
         configurations.runtimeClasspath.collect{it.isDirectory() ? it : zipTree(it)}
